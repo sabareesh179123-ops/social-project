@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Major Mukund Varadarajan</title>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-dark: #080c10;
+      --card-bg: rgba(18, 14, 10, 0.82);
+      --card-border: rgba(249, 115, 22, 0.35);
+      --orange-primary: #f97316;
+      --orange-bright: #ff6600;
+      --orange-glow: #ff8c38;
+      --orange-subtle: rgba(249, 115, 22, 0.12);
+      --red-military: #991b1b;
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(249, 115, 22, 0.15) 0%, transparent 65%),
+        radial-gradient(circle at 80% 80%, rgba(255, 102, 0, 0.08) 0%, transparent 55%);
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+      z-index: 100;
+      background: rgba(8, 12, 16, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(249, 115, 22, 0.25);
+    }
+
+    .brand-logo {
+      font-family: 'Cinzel', serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: 2px;
+      color: var(--orange-bright);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-shadow: 0 0 10px rgba(249, 115, 22, 0.4);
+    }
+
+    .top-controls {
+      display: flex;
+      gap: 14px;
+    }
+
+    .ctrl-btn {
+      background: rgba(249, 115, 22, 0.08);
+      border: 1px solid var(--card-border);
+      color: var(--orange-bright);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .ctrl-btn:hover {
+      background: rgba(249, 115, 22, 0.25);
+      border-color: var(--orange-bright);
+      box-shadow: 0 0 16px rgba(249, 115, 22, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .viewport-3d {
+      flex-grow: 1;
+      perspective: 1200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .deck-container {
+      width: 85%;
+      max-width: 1100px;
+      height: 580px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .slide-3d {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 0 2px rgba(249, 115, 22, 0.3);
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
+    }
+
+    /* 3D Slide States */
+    .slide-3d.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateZ(0px) rotateY(0deg) rotateX(0deg);
+    }
+
+    .slide-3d.prev {
+      opacity: 0.15;
+      transform: translateX(-110%) translateZ(-300px) rotateY(25deg);
+    }
+
+    .slide-3d.next {
+      opacity: 0.15;
+      transform: translateX(110%) translateZ(-300px) rotateY(-25deg);
+    }
+
+    .slide-header {
+      transform: translateZ(30px);
+    }
+
+    .slide-subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--orange-bright);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+
+    .slide-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+      text-shadow: 0 4px 14px rgba(0,0,0,0.7);
+    }
+
+    .slide-body {
+      transform: translateZ(40px);
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      margin: 18px 0;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .content-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(249, 115, 22, 0.15);
+      border-radius: 12px;
+      padding: 22px;
+      transition: all 0.3s ease;
+    }
+
+    .content-box:hover {
+      background: var(--orange-subtle);
+      border-color: var(--orange-bright);
+      transform: translateY(-4px) translateZ(12px);
+      box-shadow: 0 8px 24px rgba(249, 115, 22, 0.15);
+    }
+
+    .content-box h3 {
+      font-size: 1.1rem;
+      color: var(--orange-bright);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .content-box p, .content-box ul {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .content-box ul {
+      list-style-type: none;
+    }
+
+    .content-box ul li {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 18px;
+    }
+
+    .content-box ul li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: var(--orange-bright);
+    }
+
+    .medallion-container {
+      width: 250px;
+      height: 250px;
+      perspective: 800px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto;
+    }
+
+    .medallion-3d {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ff9e42 0%, #f97316 60%, #b44300 100%);
+      box-shadow: 0 0 35px rgba(249, 115, 22, 0.5), inset 0 0 15px rgba(255,255,255,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out;
+      cursor: grab;
+      position: relative;
+    }
+
+    .medallion-inner {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 3px dashed #612200;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      color: #3b1400;
+      font-family: 'Cinzel', serif;
+      transform: translateZ(20px);
+    }
+
+    .medallion-inner i {
+      font-size: 2.5rem;
+      margin-bottom: 6px;
+      color: #2e0d00;
+    }
+
+    .medallion-inner span {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .quiz-option {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(249, 115, 22, 0.25);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .quiz-option:hover {
+      background: rgba(249, 115, 22, 0.2);
+      border-color: var(--orange-bright);
+    }
+
+    .quiz-option.correct {
+      background: rgba(34, 197, 94, 0.25) !important;
+      border-color: #22c55e !important;
+      color: #86efac;
+    }
+
+    .quiz-option.wrong {
+      background: rgba(239, 68, 68, 0.25) !important;
+      border-color: #ef4444 !important;
+      color: #fca5a5;
+    }
+
+    .tribute-input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .tribute-input {
+      flex-grow: 1;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #fff;
+      font-family: inherit;
+    }
+
+    .tribute-input:focus {
+      outline: none;
+      border-color: var(--orange-bright);
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.3);
+    }
+
+    .tribute-list {
+      max-height: 180px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 6px;
+    }
+
+    .tribute-card {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px 14px;
+      border-radius: 6px;
+      border-left: 3px solid var(--orange-bright);
+      font-size: 0.85rem;
+    }
+
+    .bottom-bar {
+      padding: 20px 32px;
+      background: rgba(8, 12, 16, 0.85);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(249, 115, 22, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 100;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 16.66%;
+      background: linear-gradient(90deg, var(--orange-primary), var(--orange-glow));
+      transition: width 0.4s ease;
+      box-shadow: 0 0 10px var(--orange-bright);
+    }
+
+    .nav-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dots-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: var(--orange-bright);
+      box-shadow: 0 0 12px var(--orange-bright);
+      transform: scale(1.3);
+    }
+
+    .nav-btn-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.25), rgba(249, 115, 22, 0.08));
+      border: 1px solid var(--orange-bright);
+      color: var(--orange-bright);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+      background: var(--orange-bright);
+      color: #000;
+      box-shadow: 0 0 16px var(--orange-bright);
+      transform: scale(1.08);
+    }
+
+    @media (max-width: 900px) {
+      .deck-container { width: 95%; height: 520px; }
+      .slide-3d { padding: 24px; }
+      .slide-title { font-size: 1.8rem; }
+      .grid-2col { grid-template-columns: 1fr; gap: 12px; }
+      .medallion-container { width: 180px; height: 180px; }
+      .medallion-3d { width: 140px; height: 140px; }
+      .medallion-inner { width: 110px; height: 110px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-bar">
+    <div class="brand-logo">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>MAJOR MUKUND VARADARAJAN AC</span>
+    </div>
+    <div class="top-controls">
+      <button class="ctrl-btn" id="audioToggleBtn">
+        <i class="fa-solid fa-volume-high"></i> <span id="audioStatus">Audio: ON</span>
+      </button>
+      <button class="ctrl-btn" id="fullscreenBtn">
+        <i class="fa-solid fa-expand"></i> Fullscreen
+      </button>
+    </div>
+  </header>
+
+  <main class="viewport-3d">
+    <div class="deck-container" id="deckContainer">
+
+      <!-- SLIDE 1: Hero Title -->
+      <section class="slide-3d active" data-slide="0">
+        <div class="slide-header">
+          <p class="slide-subtitle">Indian Army • Ashoka Chakra Recipient</p>
+          <h1 class="slide-title">A HERO'S LEGACY</h1>
+        </div>
+        <div class="slide-body" style="flex-direction: column; text-align: center; justify-content: center;">
+          
+          <div class="medallion-container">
+            <div class="medallion-3d" id="heroMedallion">
+              <div class="medallion-inner">
+                <i class="fa-solid fa-star"></i>
+                <span>44 RASHTRIYA RIFLES</span>
+              </div>
+            </div>
+          </div>
+
+          <p style="font-size: 1.25rem; color: var(--orange-bright); margin-top: 20px; font-weight: 700;">
+            Major Mukund Varadarajan, AC
+          </p>
+          <p style="font-size: 0.95rem; color: var(--text-muted); max-width: 600px; margin-top: 8px;">
+            An interactive 3D tribute to the supreme valor, leadership, and sacrifice of 44 Rashtriya Rifles' immortal commander during Operation Qazipathri.
+          </p>
+        </div>
+        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.4); text-align: center;">
+          <i class="fa-solid fa-arrows-left-right"></i> Use Left/Right Arrow Keys or Navigation Controls to Explore
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Early Life & Commissioning -->
+      <section class="slide-3d next" data-slide="1">
+        <div class="slide-header">
+          <p class="slide-subtitle">01 / Foundation & Commissioning</p>
+          <h2 class="slide-title">Early Life & Military Calling</h2>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2col">
+            <div class="content-box">
+              <h3><i class="fa-solid fa-user-graduate"></i> Origins & Education</h3>
+              <p>Born on April 12, 1983, in Kozhikode, Kerala, and brought up in Tambaram, Chennai. Graduated with a Commerce degree from Madras Christian College before following his military calling.</p>
+            </div>
+            <div class="content-box">
+              <h3><i class="fa-solid fa-award"></i> OTA & Commissioning</h3>
+              <p>Joined the prestigious Officers Training Academy (OTA), Chennai, in 2004. Commissioned as a Lieutenant into the renowned 22nd Battalion of The Rajput Regiment on March 18, 2006.</p>
+            </div>
+            <div class="content-box">
+              <h3><i class="fa-solid fa-earth-americas"></i> International Service</h3>
+              <p>Served as an instructor at the Infantry School in Mhow and completed an international United Nations peacekeeping mission with UNIFIL in Lebanon.</p>
+            </div>
+            <div class="content-box">
+              <h3><i class="fa-solid fa-ranking-star"></i> Promotion to Major</h3>
+              <p>Promoted to the rank of Major in October 2012, recognized for exceptional tactical aptitude, discipline, and exemplary troop command.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: 44 Rashtriya Rifles -->
+      <section class="slide-3d next" data-slide="2">
+        <div class="slide-header">
+          <p class="slide-subtitle">02 / Operational Leadership</p>
+          <h2 class="slide-title">44 Rashtriya Rifles & Shopian</h2>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2col">
+            <div class="content-box">
+              <h3><i class="fa-solid fa-crosshairs"></i> Counter-Insurgency Duty</h3>
+              <p>Deputed to 44 Rashtriya Rifles (Victor Force) in Shopian district, South Kashmir—one of the most active operational counter-terror domains.</p>
+            </div>
+            <div class="content-box">
+              <h3><i class="fa-solid fa-handshake"></i> Troop & Local Trust</h3>
+              <p>Earned deep affection from his men for leading from the front, alongside building genuine rapport and trust with local Kashmiri villagers.</p>
+            </div>
+            <div class="content-box" style="grid-column: span 2;">
+              <h3><i class="fa-solid fa-shield-cat"></i> Operational Track Record</h3>
+              <ul>
+                <li>Planned and executed multiple high-risk cordon and search operations.</li>
+                <li>Successfully neutralized JeM Commander Altaf Baba in a decisive counter-terror operation.</li>
+                <li>Set benchmarks for tactical stealth, speed, and strict prevention of collateral civilian harm.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Operation Qazipathri -->
+      <section class="slide-3d next" data-slide="3">
+        <div class="slide-header">
+          <p class="slide-subtitle">03 / The Final Mission</p>
+          <h2 class="slide-title">Operation Qazipathri (25 April 2014)</h2>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2col">
+            <div class="content-box">
+              <h3><i class="fa-solid fa-person-rifle"></i> Immediate Response</h3>
+              <p>Following threats to election personnel in Shopian, intelligence cornered 3 heavily armed insurgents inside a residential structure in Qazipathri village.</p>
+            </div>
+            <div class="content-box">
+              <h3><i class="fa-solid fa-users"></i> Civilian Evacuation</h3>
+              <p>Major Mukund personally ensured all trapped local civilians were safely evacuated out of the line of fire before commencing the assault.</p>
+            </div>
+            <div class="content-box" style="grid-column: span 2; border-color: rgba(239, 68, 68, 0.5); background: rgba(239, 68, 68, 0.08);">
+              <h3 style="color: #f87171;"><i class="fa-solid fa-fire"></i> Heroism Under Fire</h3>
+              <p style="color: #f8fafc;">Forming a buddy pair with Sepoy Vikram Singh, Major Mukund entered the target house. Despite sustaining <b>three fatal gunshot wounds</b>, he single-handedly crawled forward and neutralized the top commander, completing the objective before succumbing to his injuries.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Ashoka Chakra Citation -->
+      <section class="slide-3d next" data-slide="4">
+        <div class="slide-header">
+          <p class="slide-subtitle">04 / Immortal Honor</p>
+          <h2 class="slide-title">Ashoka Chakra Citation</h2>
+        </div>
+        <div class="slide-body" style="flex-direction: column; justify-content: center;">
+          <blockquote style="border-left: 4px solid var(--orange-bright); padding-left: 24px; font-style: italic; font-size: 1.15rem; color: #f1f5f9; line-height: 1.7; margin-bottom: 24px;">
+            "Major Mukund Varadarajan displayed conspicuous bravery, swift initiative, and supreme leadership in the face of the enemy. His action ensured the elimination of three top terrorists without any civilian casualties."
+          </blockquote>
+          <div class="grid-2col">
+            <div class="content-box">
+              <h3><i class="fa-solid fa-medal"></i> Republic Day Honor</h3>
+              <p>Awarded India's highest peacetime gallantry award, the Ashoka Chakra, presented by President Pranab Mukherjee to his wife, Indhu Rebecca Varghese, on Jan 26, 2015.</p>
+            </div>
+            <div class="content-box">
+              <h3><i class="fa-solid fa-film"></i> Eternal Legacy</h3>
+              <p>Honored with a bust at OTA Chennai and immortalized in national memory, including the major 2024 biographical film <i>'Amaran'</i>.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Knowledge Quiz & Tribute Board -->
+      <section class="slide-3d next" data-slide="5">
+        <div class="slide-header">
+          <p class="slide-subtitle">05 / Engagement & Honor</p>
+          <h2 class="slide-title">Knoledge Quiz & Tribute Board</h2>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2col">
+            <!-- Mini Quiz -->
+            <div class="content-box">
+              <h3><i class="fa-solid fa-circle-question"></i> Quick Quiz</h3>
+              <p style="margin-bottom: 12px; font-weight: 600; color: #fff;" id="quizQuestion">
+                Which battalion was Major Mukund deputed to during Operation Qazipathri?
+              </p>
+              <div id="quizOptions">
+                <div class="quiz-option" onclick="checkQuiz(this, false)">1st Para SF</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true)">44 Rashtriya Rifles</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">9 Assam Rifles</div>
+              </div>
+              <p id="quizFeedback" style="margin-top: 10px; font-size: 0.85rem; font-weight: 700;"></p>
+            </div>
+
+            <!-- Tribute Board -->
+            <div class="content-box">
+              <h3><i class="fa-solid fa-heart"></i> Leave a Tribute</h3>
+              <div class="tribute-input-group">
+                <input type="text" id="tributeInput" class="tribute-input" placeholder="Write your salute or tribute..." maxlength="80">
+                <button class="ctrl-btn" onclick="addTribute()"><i class="fa-solid fa-paper-plane"></i></button>
+              </div>
+              <div class="tribute-list" id="tributeList">
+                <div class="tribute-card"><b>Officer Cadet:</b> Jai Hind! A true leader who lives on in our hearts forever.</div>
+                <div class="tribute-card"><b>Student:</b> Inspiring generations of young Indians. Salutes to Major Mukund!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="bottom-bar">
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="nav-controls">
+      <div style="font-size: 0.85rem; color: var(--orange-bright); font-weight: 600;" id="slideCounter">
+        SLIDE 1 / 6
+      </div>
+      <div class="dots-container" id="dotsContainer">
+        <div class="dot active" onclick="goToSlide(0)"></div>
+        <div class="dot" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
+        <div class="dot" onclick="goToSlide(4)"></div>
+        <div class="dot" onclick="goToSlide(5)"></div>
+      </div>
+      <div class="nav-btn-group">
+        <button class="nav-btn" id="prevBtn" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 0;
+    const totalSlides = 6;
+    let audioEnabled = true;
+
+    // Web Audio API Synthesizer
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+      if (!audioEnabled) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'click') {
+          osc.frequency.setValueAtTime(480, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(960, audioCtx.currentTime + 0.05);
+          gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.05);
+        } else if (type === 'correct') {
+          osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+          osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.25);
+        }
+      } catch (e) { console.log(e); }
+    }
+
+    // Toggle Audio Mode
+    document.getElementById('audioToggleBtn').addEventListener('click', () => {
+      audioEnabled = !audioEnabled;
+      document.getElementById('audioStatus').innerText = audioEnabled ? 'Audio: ON' : 'Audio: OFF';
+      if (audioEnabled) playSound('click');
+    });
+
+    function updateDeck() {
+      const slides = document.querySelectorAll('.slide-3d');
+      const dots = document.querySelectorAll('.dot');
+
+      slides.forEach((slide, index) => {
+        slide.classList.remove('active', 'prev', 'next');
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else if (index < currentSlide) {
+          slide.classList.add('prev');
+        } else {
+          slide.classList.add('next');
+        }
+      });
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+      });
+
+      document.getElementById('progressFill').style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+      document.getElementById('slideCounter').innerText = `SLIDE ${currentSlide + 1} / ${totalSlides}`;
+      playSound('click');
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateDeck();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateDeck();
+      }
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateDeck();
+    }
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    // Fullscreen Toggle
+    document.getElementById('fullscreenBtn').addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    });
+
+    const medallion = document.getElementById('heroMedallion');
+    document.addEventListener('mousemove', (e) => {
+      if (currentSlide === 0 && medallion) {
+        const xAxis = (window.innerWidth / 2 - e.pageX) / 15;
+        const yAxis = (window.innerHeight / 2 - e.pageY) / 15;
+        medallion.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+      }
+    });
+
+    function checkQuiz(element, isCorrect) {
+      const options = document.querySelectorAll('.quiz-option');
+      options.forEach(opt => opt.classList.remove('correct', 'wrong'));
+
+      const feedback = document.getElementById('quizFeedback');
+      if (isCorrect) {
+        element.classList.add('correct');
+        feedback.style.color = '#22c55e';
+        feedback.innerText = '✓ Correct! Major Mukund led troops under 44 Rashtriya Rifles.';
+        playSound('correct');
+      } else {
+        element.classList.add('wrong');
+        feedback.style.color = '#ef4444';
+        feedback.innerText = '✕ Incorrect. Try again!';
+      }
+    }
+
+    function addTribute() {
+      const input = document.getElementById('tributeInput');
+      const text = input.value.trim();
+      if (text) {
+        const list = document.getElementById('tributeList');
+        const card = document.createElement('div');
+        card.className = 'tribute-card';
+        card.innerHTML = `<b>Visitor:</b> ${text}`;
+        list.prepend(card);
+        input.value = '';
+        playSound('click');
+      }
+    }
+  </script>
+</body>
+</html>
